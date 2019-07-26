@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>输入金额限制</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 my-4 ">
+	<div class="form-group">
+		<input type="number" class="form-control" value="78452.00000">
+		<br>
+		<input id="invoiceAmount" type="text" class="form-control" value="75252.00">
+	</div>
+	<div class="result"></div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<!-- <script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script> -->
+	<script type="text/javascript">
+		(function($) {
+	      $.fn.onlyPutNumber  = function(params) {
+	      	$(this).on("input",function(){
+	      		this.value =  this.value.replace(/[^\d.]/g,"");
+			  	this.value = this.value.replace(/\.{2,} | \。+/g,"."); //只保留第一个. 清除多余的   
+			  	this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数 
+			  	if(this.value.indexOf(".")< 0 && this.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额  
+				   this.value= parseFloat(this.value);  
+				} 
+	      	})
+	      		
+	      	return this;
+	      };
+	    })($);
+
+		$(document).ready(function(){
+			$("#invoiceAmount").onlyPutNumber();
+		})
+	</script>
+</body>
+</html>

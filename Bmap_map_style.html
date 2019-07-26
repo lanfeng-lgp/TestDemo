@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>个性化地图</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<style>
+			#mapLine{
+				margin: 30px auto;
+				width: 800px;
+				height: 800px;
+				background-color: #f2F2F2;
+			}				
+		</style>
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 my-4">	
+	<h2>个性化地图</h2>
+	<a href="http://lbsyun.baidu.com/customv2/editor/776feaf438194b9ff0fac6484e727a0c" target="_blank">http://lbsyun.baidu.com/customv2/editor/776feaf438194b9ff0fac6484e727a0c</a>
+	<div id="mapLine"></div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			var map = new BMap.Map("mapLine");    // 创建Map实例
+			map.centerAndZoom("上海市", 12);  // 初始化地图,设置中心点坐标和地图级别
+			map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+			//向地图添加控件
+			map.addControl(new BMap.NavigationControl());//平移缩放控件，默认在地图左上方
+			map.addControl(new BMap.ScaleControl());//比例尺控件，默认在地图左下方
+			map.addControl(new BMap.OverviewMapControl());//缩略图控件，默认在地图右下方
+			var mapstyle = [{
+		        "featureType": "highway",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#f5d78eff"
+		        }
+		    }, {
+		        "featureType": "local",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#f4f4f4ff"
+		        }
+		    }, {
+		        "featureType": "background",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#fafafaff"
+		        }
+		    }, {
+		        "featureType": "building",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#f4f4f4ff"
+		        }
+		    }, {
+		        "featureType": "water",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#cfe2f3ff"
+		        }
+		    }, {
+		        "featureType": "green",
+		        "elementType": "all",
+		        "stylers": {
+		            "color": "#cbeccfff"
+		        }
+		    }, {
+		        "featureType": "subway",
+		        "elementType": "all",
+		        "stylers": {
+		            "weight": "0.5",
+		            "lightness": 40
+		        }
+		    }, {
+		        "featureType": "highway",
+		        "elementType": "labels.text.fill",
+		        "stylers": {
+		            "color": "#666666ff"
+		        }
+		    }, {
+		        "featureType": "subway",
+		        "elementType": "labels.text.fill",
+		        "stylers": {
+		            "color": "#444444ff"
+		        }
+		    }, {
+		        "featureType": "subway",
+		        "elementType": "labels.icon",
+		        "stylers": {
+		            "visibility": "off"
+		        }
+		    }];
+			map.setMapStyle({
+				styleJson:mapstyle
+			});
+
+		})
+	</script>
+</body>
+</html>

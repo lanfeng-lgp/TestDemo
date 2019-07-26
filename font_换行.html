@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>css 换行区别</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<style>		
+            .word{background:#E4FFE9;width:250px;margin:50px auto;padding:20px;font-family:"microsoft yahei";}
+            /* 强制不换行 */
+            .nowrap{white-space:nowrap;}
+            /* 允许单词内断句，首先会尝试挪到下一行，看看下一行的宽度够不够，
+            不够的话就进行单词内的断句 */
+            .breakword{word-wrap: break-word;}
+            /* 断句时，不会把长单词挪到下一行，而是直接进行单词内的断句 */
+            .breakAll{word-break:break-all;}            
+            /* 超出部分显示省略号 */
+            .ellipsis{text-overflow:ellipsis;overflow:hidden;}
+		</style>
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="">
+	<div class="mx-4 my-4">			
+        <div class = "word">
+            <p class = "nowrap">wordwrap:breakword;abcdefghijklmnopqrstuvwxyz</p>          
+            <p class = "breakword">wordwrap:break-word;abcdefghijklmnopqrstuvwxyz</p>
+            <p class = "breakAll">wordwrap:break-word;abcdefghijklmnopqrstuvwxyz</p>
+            <p class = "normal">wordwrap:breakword;abcdefghijklmnopqrstuvwxyz</p>
+            <p class = "ellipsis">wordwrap:breakword;abcdefghijklmnopqrstuvwxyz</p>
+        </div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<!-- <script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script> -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>console</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<script>
+		var errMsg = "自定义error"
+		try {
+			// statements
+			throw errMsg;
+		} catch(e) {
+			// statements
+			console.log(errMsg);
+			console.error(errMsg);
+			console.warn(errMsg)
+		}
+		finally {
+			console.log('try_catch after')
+		    // 无论 try / catch 结果如何都执行的代码块
+		}
+		var arr= [ 
+		         { num: "1"},
+		         { num: "2"}, 
+		         { num: "3" }
+		    ];
+		console.table(arr);
+
+		(function() {
+		  for (var i = 0; i < 5; i++) { 
+		    console.count('count'); 
+		  }
+		})();
+
+		// time timeEnd 中间运行花费时间
+		console.time('计时器1');
+		for (var i = 0; i < 100; i++) {
+		  for (var j = 0; j < 100; j++) {}
+		}
+		console.timeEnd('计时器1');
+
+
+		//向上追踪函数
+		function d(a) { 
+		  console.trace();
+		  return a;
+		}
+		function b(a) { 
+		  return c(a);
+		}
+		function c(a) { 
+		  return d(a);
+		}
+		var a = b('123');
+
+
+		console.group('第一层');
+		  console.group('第二层');
+
+		    console.log('error');
+		    console.error('error');
+		    console.warn('error');
+
+		  console.groupEnd(); 
+		console.groupEnd();
+	</script>
+</body>
+</html>

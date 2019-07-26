@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>Notification 浏览器通知</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="">
+	<div class="mx-4 my-4">			
+        <h3>HTML5 原生 Notification 浏览器通知</h3>
+        <br>		
+		<button id="btn" class="btn btn-primary" type="button">原生通知</button>
+		<br>
+		<h3 class="mt-5">第三方插件 <a href="https://github.com/jaywcjlove/iNotify">iNotify</a> 通知</h3>
+        <br>		
+		<button id="btn1" class="btn btn-primary" type="button">通知消息</button>
+		<br>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="./library/notify.min.js"></script>
+	<!-- <script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script> -->
+	<script type="text/javascript">
+		function browserNote(){			
+			var n = new Notification("您有个通知请及时跟进！", {  
+			    icon: 'images/logo.png',  
+			    body: '2222年的生日快到了！'  
+			});  
+			  
+			//onshow函数在消息框显示时会被调用  
+			//可以做一些数据记录及定时操作等  
+			n.onshow = function() {  
+			    console.log('浏览器通知notification 显示'); 
+			    //5秒后关闭消息框  
+			    setTimeout(function() {  
+			        n.close();  
+			    }, 5000);  
+			};  
+			  
+			//消息框被点击时被调用  
+			//可以打开相关的视图，同时关闭该消息框等操作  
+			n.onclick = function() {
+			    console.log('浏览器通知notification 点击，页面显示'); 
+			    //opening the view...
+			    window.focus();   //焦点聚集到当前页面 
+			    n.close();  
+			};  
+			  
+			//当有错误发生时会onerror函数会被调用  
+			//如果没有granted授权，创建Notification对象实例时，也会执行onerror函数  
+			n.onerror = function() {  
+			    console.log('浏览器通知notification has an error');  
+			    //do something useful  
+			};  
+			  
+			//一个消息框关闭时onclose函数会被调用  
+			n.onclose = function() {  
+			    console.log('浏览器通知notification is closed');  
+			    //do something useful  
+			};
+		}
+		$(document).ready(function(){
+		    $("body").on("click", "#btn", function() {
+		    	if (Notification.permission == "granted") {
+		            browserNote();
+		        } else if (Notification.permission != "denied") {
+		            Notification.requestPermission(function (permission) {
+		              browserNote();
+		            });
+		        }
+		    })
+
+			var notify = new Notify({
+			  effect: 'flash',
+			  interval: 500,
+			});
+			notify.setFavicon('1');
+
+		    $("body").on("click", "#btn1", function() {		    	
+				notify.notify({
+				  title: '您还有个通知请及时跟进！',
+				  body: '离2223年的生日还有好几年！',  
+			      icon: 'images/logo.png', 
+				  openurl: 'https://github.com/jaywcjlove/iNotify',
+				  onclick: function() {
+				    console.log('on click')
+				  },
+				  onshow: function() {
+				    console.log('on show')
+				  },
+				});
+		    })
+		})
+	</script>
+</body>
+</html>

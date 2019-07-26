@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>Test</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 mt-4">
+	<div>
+		<label>
+			链接：<input name="link" type="text" value="https://www.yilutong.com/wechat_carowner/pages/user/redirect.html?channelId=83&curedirect=activity-giftCoupon&activityId=10&shopId=63">
+		</label>
+		<div class="mt-4">			
+			<button id="make" class="btn btn-primary w-100" type="button">生产二维码</button>
+		</div>
+		<button id="make">确定</button>
+		<button id="down">转图片</button>
+		<a class="downImg" download="qrcode" href="">下载</a>
+		<div id="qrcode">
+			<canvas width="200" height="200"></canvas>
+		</div>
+		<img class="downImg" src="" alt="">
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function (argument) {
+			$("#make").click(function(){
+				var link = $("input").val();
+				jQuery('#qrcode').qrcode({
+				    render: "canvas", //也可以替换为table
+				    width: 200,
+				    height: 200,
+				    text:link
+				});
+			})
+			$("#down").click(function(){
+				var canvas = $("#qrcode").find("canvas").get(0);
+				var context = canvas.getContext('2d');
+		        // 【重要】关闭抗锯齿
+		        context.mozImageSmoothingEnabled = false;
+		        context.webkitImageSmoothingEnabled = false;
+		        context.msImageSmoothingEnabled = false;
+		        context.imageSmoothingEnabled = false; 
+		        
+		        var dataUrl = canvas.toDataURL("image/jpeg");
+		        var open = " ";
+		        if($("#qrcodeImageDown").length == 0){
+		        	$("body").append('<a id="qrcodeImageDown" download="qrcode" href="'+dataUrl+'">二维码下载</a>');
+		        }else{
+					$("#qrcodeImageDown").attr("href",dataUrl)
+		        }
+        		$("#qrcodeImageDown").click();
+			})
+			convertImgToBase64type('http://192.168.1.8:9090/wechat_carowner/images/banner-instead.jpg',function(data){
+				console.log(data)
+			})
+			function convertImgToBase64type(url, callback, outputFormat) {
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+				var img = new Image;
+				img.setAttribute('crossOrigin', 'anonymous');
+				img.onload = function() {
+					var width = img.width;
+					var height = img.height;
+					// 按比例压缩4倍
+					var bili = Math.round(width / 450);
+					bili = bili ? bili : 1;
+					var rate = 1 / bili;
+					canvas.width = width * rate;
+					canvas.height = height * rate;
+					ctx.drawImage(img, 0, 0, width, height, 0, 0, width * rate, height * rate);
+					var dataURL = canvas.toDataURL(outputFormat || 'image/jpeg');
+					callback.call(this, dataURL);
+					canvas = null;
+				}
+				img.src = url+"?"+new Date().getTime();;
+			}
+		})
+	</script>
+</body>
+</html>

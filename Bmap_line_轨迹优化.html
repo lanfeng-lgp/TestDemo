@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>地图轨迹优化</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<style>
+			#mapLine{
+				width: 800px;
+				height: 500px;
+				background-color: #f2F2F2;
+			}				
+		</style>
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 my-4">	
+	<h2>地图轨迹优化</h2>
+	<p>优化点: 时间去重，速度限制，长时间导航</p>
+	<div id="mapLine"></div>
+	<div class="mt-4">
+		<button id="btn1" class="btn btn-primary" type="button">轨迹优化</button>	
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script>
+	<script type="text/javascript">
+		var map = null;
+		var linePointsData = []; //待优化数据
+		var	linePoints = []; //待优化经纬度数据
+  		var	DriverPoints=[];	//优化数据
+  		var DriverPolyline = [];//地图导航路线
+		//百度线路优化
+		function optimiseLine(linePoints,lineIndex){
+			// 优化到最后点
+			if(lineIndex >= linePoints.length-1){				
+				return linePoints;
+			}
+			var dataA = linePoints[lineIndex-1],dataB = linePoints[lineIndex],dataC = linePoints[lineIndex+1];
+			//时间去重
+			if(dataA.report_time == dataB.report_time){
+				linePoints.splice(lineIndex,1);
+				return optimiseLine(linePoints,lineIndex);	
+			}
+			if(dataB.report_time == dataC.report_time){
+				linePoints.splice(lineIndex+1,1);
+				return optimiseLine(linePoints,lineIndex);
+			}
+			var pointA = new BMap.Point(dataA.longitude, dataA.latitude);
+			var pointB = new BMap.Point(dataB.longitude, dataB.latitude);
+			var pointC = new BMap.Point(dataC.longitude, dataC.latitude);
+			var lineAB = map.getDistance(pointA,pointB);
+			var lineBC = map.getDistance(pointB,pointC);
+			var timeAB = (new Date(dataB.report_time).getTime() - new Date(dataA.report_time).getTime())/1000;
+			var timeBC = (new Date(dataC.report_time).getTime() - new Date(dataB.report_time).getTime())/1000;
+			var speedAB = (lineAB/timeAB).toFixed(2);
+			var speedBC = (lineBC/timeBC).toFixed(2);
+
+			//速度去错 120km/h = 33.33m/s  72km/h = 20m/s
+			var speedlimit = 20;
+			if(speedAB > speedlimit){
+				linePoints.splice(lineIndex,1);
+				return optimiseLine(linePoints,lineIndex);		
+			}
+			if(speedBC > speedlimit){
+				linePoints.splice(lineIndex+1,1);
+				return optimiseLine(linePoints,lineIndex);	
+			}
+			lineIndex++;
+			return optimiseLine(linePoints,lineIndex);
+		}
+		//长距离点导航
+		function DriveRoute(pointA,pointB,index){
+		    var drawLine = function (results){
+				var planObj = results.getPlan(0);
+				// 绘制驾车线路
+				var route = planObj.getRoute(0);
+				// 驾车线路	
+	        	DriverPolyline.push(new BMap.Polyline(route.getPath(), {strokeColor: "#3299CC", strokeWeight: 5, strokeOpacity: 1}));
+		  		map.addOverlay(DriverPolyline[DriverPolyline.length-1]);
+				var item = {
+					number:index,
+					list:route.getPath()
+				}
+				DriverRoutePoints[index] = route.getPath();
+			}
+		  	var driving = new BMap.DrivingRoute(map,{onSearchComplete:drawLine});
+			driving.search(pointA, pointB); 
+		}
+		 //轨迹优化
+	    function mapPolyline(polylineData){
+  			//优化路径描绘star 
+  			points=[];
+  			DriverRoutePoints = [];
+  			for(var i=0;i<DriverPolyline.length;i++){
+	  			map.removeOverlay(DriverPolyline[i]);	  				
+  			}
+  			DriverPolyline = [];
+  			var optimiseData = optimiseLine($.extend([],polylineData),1);
+  			var pointsStar = []; //紧凑点描绘，分开点导航;分段;
+  			for(var i = 0;i<optimiseData.length;i++){
+  				var dataA = optimiseData[i],pointA = new BMap.Point(dataA.longitude, dataA.latitude);
+		        points.push(pointA);
+		        pointsStar.push(pointA);
+		        if(i == (optimiseData.length-1)){
+		        	DriverPolyline.push(new BMap.Polyline(pointsStar, {strokeColor: "#3299CC", strokeWeight: 5, strokeOpacity: 1}));
+			  		map.addOverlay(DriverPolyline[DriverPolyline.length-1]);
+		        	break;
+		        }	 			        
+				var dataB = optimiseData[i+1],pointB = new BMap.Point(dataB.longitude, dataB.latitude);
+				var timeAB = (new Date(dataB.report_time).getTime() - new Date(dataA.report_time).getTime())/1000;
+		        if(timeAB > 600){ //时间大于10分钟 导航路线
+		        	DriverPolyline.push(new BMap.Polyline(pointsStar, {strokeColor: "#3299CC", strokeWeight: 5, strokeOpacity: 1}));
+			  		map.addOverlay(DriverPolyline[DriverPolyline.length-1]);
+		       		DriveRoute(pointA,pointB,i);
+		        	pointsStar = [pointB];
+		       	}
+  			}
+  			DriverPoints = optimiseData;
+  			//end
+	    } 
+		$(document).ready(function(){
+			map = new BMap.Map("mapLine");    // 创建Map实例
+			// map.centerAndZoom("上海市", 12);  // 初始化地图,设置中心点坐标和地图级别
+			map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+			//向地图添加控件
+			map.addControl(new BMap.NavigationControl());//平移缩放控件，默认在地图左上方
+			map.addControl(new BMap.ScaleControl());//比例尺控件，默认在地图左下方
+			map.addControl(new BMap.OverviewMapControl());//缩略图控件，默认在地图右下方
+
+            $.getJSON('./json/Bmap_line_point.json',function(result) {
+            	linePointsData = result.data;
+            	$.each(linePointsData, function(i, content){
+			        var point = {
+			        	entity_name: "BDGJYH",
+				        loc_time:  ((new Date(content.report_time)).getTime())/1000,
+				        latitude: Number(content.latitude),
+				        longitude: Number(content.longitude),
+				        coord_type_input: "bd09ll"
+			        };
+			        	linePoints.push(point);	
+	  			})
+		        var points = [];
+		  		$.each(linePoints, function(i, content){
+					var point = new BMap.Point(content.longitude, content.latitude);
+					points.push(point);
+		  		})
+		  		map.removeOverlay(BMapLine);
+				BMapLine = new BMap.Polyline(points, {strokeColor: "#dc3545", strokeWeight: 5, strokeOpacity: 1});
+				map.addOverlay(BMapLine);
+
+				map.setViewport(points);
+            })
+            var BMapLine = null, BMapLine1 = null;
+
+            $("body").on("click", "#btn1", function() {            	
+            	if(linePointsData.length < 2){
+            		alert("优化轨迹点不够");
+            		return;
+            	}
+  				mapPolyline(linePointsData);;
+				return;
+            })
+
+
+		})
+	</script>
+</body>
+</html>

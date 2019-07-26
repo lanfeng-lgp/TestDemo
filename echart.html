@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>数据展示</title>
+	<script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
+	<script src="js/china.js"></script>
+	<style type="text/css">
+		body{margin: 0;}
+		.wrap{overflow-y: hidden; }
+		.map{float: left; width: 50%; height: 400px; margin-bottom: 30px; }
+		.w100{width: 100%; height: 650px; }
+		.h100{min-height: 650px; height: calc(100vh - 40px); }
+		.select{float: left; width: 100%; overflow: hidden; }
+		.select select{background: transparent; margin-right: 5px; float: right; padding: 5px; font-size: 16px; height: 34px; outline: none; border: 1px solid #ccc; display: none; }
+		.tab{width: 100%; float: left; background: #404a59; overflow: hidden; margin-bottom: 30px; }
+		.tab .map{margin-bottom:0; } 
+		.tab a{display: inline-block; width: 120px; text-align: center; height: 40px; text-decoration: none; font-style: 20px; font-weight: bolder; line-height: 40px; background: #404a59; color: #999; }
+		.tab a.active,.tab a:hover{color: #FFF; }
+		.hide{display: none; } 
+		::-webkit-scrollbar{height:8px; width:8px; -webkit-transition:all 0.3s ease-in-out; -o-transition:all 0.3s ease-in-out; -moz-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out; -webkit-border-radius:2px;border-radius:2px } ::-webkit-scrollbar-button{display:none } ::-webkit-scrollbar-thumb{width:8px; min-height:15px; background:rgba(50,50,50,0.6) !important; -webkit-transition:all 0.3s ease-in-out; -o-transition:all 0.3s ease-in-out; -moz-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out; -webkit-border-radius:2px; border-radius:2px } ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.5) !important }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="tab">
+			<div>
+				<a class="active" href="javascript:void(0);" title="">案件量分布图</a><a href="javascript:void(0);" title="">热力分布图</a>
+			</div>			
+			<div class="map mapType5 w100 h100"></div>	
+			<div class="map mapType6 w100 h100 hide"></div>	
+		</div>	
+		<div class="map mapType0"></div>
+		<div class="map mapType1"></div>	
+		<div class="map mapType2 w100"></div>
+		<div class="select">
+			<select name="" id="timeCity">
+				<option value="0">所有地区</option>
+			</select>
+		</div>		
+		<div class="map mapType4 w100"></div>
+	</div>
+	<script type="text/javascript">
+		var urlIp = "http://192.168.1.194:8089";
+		/*对象排序大 -- >小*/
+		function sortObjectKeys(obj){var newObj = {}; Object.keys(obj).sort(function(a,b){return obj[b]-obj[a]; }).forEach(function(k){newObj[k] = obj[k]}); return newObj; } 
+		$(document).ready(function() {
+			var resultData = null,option = [];
+			function handelMap1(list){
+				var option = {
+				    title: {
+				        text: '案件量统计',
+				        subtext: '数据展示'
+				    },
+				    tooltip: {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				    	right:'4%',
+				        data:[]
+				    },
+				    grid: {
+				        left: '3%',
+				        right: '4%',
+				        bottom: '3%',
+				        containLabel: true
+				    },
+				    xAxis:  {
+				        type: 'category',
+				        boundaryGap: false,
+				        data: []
+				    },
+				    yAxis: {
+				        type: 'value',
+				        axisLabel: {
+				            formatter: '{value} 件'
+				        }
+				    },
+				    series: []
+				};
+    			var name = [],lineName = [], value = {},line = {};
+    			for (var i in list) {
+    				name.push(i);
+    				for(var j in list[i]){
+    					if(!line[j]){
+    						line[j] = 0;
+    						value[j] = [];
+    					}
+    				}
+    			}
+    			for (var i in list) {
+    				for(var j in line){
+    					if(!list[i][j]){
+    						value[j].push(0);
+    					}else{
+    						value[j].push(list[i][j])
+    					}
+    				}
+    			}
+    			option.xAxis.data = name;
+    			for (var i in value) {
+    				lineName.push(i)
+    				var item = {
+    					name:i,
+			            type:'line',
+			            data:value[i],
+			            markPoint: {
+			                data: [
+			                    {type: 'max', name: '最大值'},
+			                    {type: 'min', name: '最小值'}
+			                ]
+			            }
+    				}
+    				option.series.push(item);
+    			}
+    			option.legend.data = lineName;
+   				myCharts[0].setOption(option);
+   				myCharts[0].hideLoading();
+			}
+			function handelMap2(list){
+				var option = {
+				    title: {
+				        text: '拖车里程数统计',
+				        subtext: '数据'
+				    },
+				    tooltip: {
+				        trigger: 'axis',
+				        axisPointer: {
+				            type: 'shadow'
+				        }
+				    },
+				    grid: {
+				        left: '3%',
+				        right: '4%',
+				        bottom: '3%',
+				        containLabel: true
+				    },
+				    xAxis: {
+				        type: 'value',
+				        boundaryGap: [0, 0.01]
+				    },
+				    yAxis: {
+				        type: 'category',
+				        data: []
+				    },
+				    series: [
+				        {
+				            name: '救援里程数',
+				            type: 'bar',
+				            data: []
+				        },
+				    ]
+				};
+
+    			var name = [], value = [];
+    			for (var i in list) {
+    				name.push(i);
+    				value.push(list[i])
+    			}
+    			option.yAxis.data = name;
+    			option.series[0].data = value;
+   				myCharts[1].setOption(option);
+   				myCharts[1].hideLoading();
+			}
+			function handelMap3(list){
+				var option = {
+				    tooltip: {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b}: {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        x: 'left',
+				        data:[]
+				    },
+				    grid:{
+				    	containLabel:true
+				    },
+				    series: [
+				        {
+				            name:'品牌车辆',
+				            type:'pie',
+				            selectedMode: 'single',
+				            radius: [0, '34%'],
+
+				            label: {
+				                normal: {
+				                    position: 'inner'
+				                }
+				            },
+				            labelLine: {
+				                normal: {
+				                    show: false
+				                }
+				            },
+				            data:[]
+				        },
+				        {
+				            name:'服务类型',
+				            type:'pie',
+				            radius: ['40%', '60%'],
+				            avoidLabelOverlap:false,
+				            label: {
+				                normal: {
+					            	formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}',
+				                    backgroundColor: '#eee',
+				                    borderColor: '#aaa',
+				                    borderWidth: 1,
+				                    borderRadius: 4,
+				                    rich: {
+				                        a: {
+				                            color: '#999',
+				                            lineHeight: 22,
+				                            align: 'center'
+				                        },
+				                        hr: {
+				                            borderColor: '#aaa',
+				                            width: '100%',
+				                            borderWidth: 0.5,
+				                            height: 0
+				                        },
+				                        b: {
+				                            fontSize: 16,
+				                            lineHeight: 33
+				                        },
+				                        per: {
+				                            color: '#eee',
+				                            backgroundColor: '#334455',
+				                            padding: [2, 4],
+				                            borderRadius: 2
+				                        }
+				                    },
+					                show:false
+					            },
+				                emphasis : {
+				                    show: true
+				                }
+				            },
+				            labelLine: {
+				                normal: {
+					                show:false
+					            }, 
+				                emphasis : {
+				                    show: true
+				                }
+				            },
+				            data:[]
+				        }
+				    ]
+				};			
+				var selectedNumber = 4,wrapValueCount = {};
+    			var name = [],selected = {},value = [],wrapValue = [];
+    			for (var i in list) {
+    				name.push(i);
+    				selected[i] = false;
+    			}
+    			for (var i in list) {
+    				value.push({
+    					name:i,
+    					value:list[i]["总量"],
+    					detail:sortObjectKeys(list[i])
+    				})
+    				for(var j in list[i]){
+    					if(j == '总量') continue;
+    					name.push(j);
+    					selected[j] = false;
+    					wrapValueCount[j] = (wrapValueCount[j]?wrapValueCount[j]:0) + list[i][j];
+    				}
+    			}
+    			value.sort(function(a,b){
+    				return b.value - a.value;
+    			}) 
+    			wrapValueCount = sortObjectKeys(wrapValueCount);
+    			/*设置选中  	*/
+    			for (var i = 0; i < selectedNumber; i++) {
+    				if(value[i].name == '其他品牌') continue;
+    				selected[value[i].name] = true;
+    			}
+    			for(var i in wrapValueCount){
+    				if(selectedNumber<=0){
+    					break;
+    				}
+    				selected[i] = true;
+    				selectedNumber--;
+    			}
+    			value.map(function(item){
+    				var valueNumber = 0;
+    				var bool = true;
+    				for(var j in item.detail){
+    					if(j == '总量') continue;
+    					var wrapValueItem ={
+	    					name:j,
+	    					value:item.detail[j]
+    					};
+    					if(selected[j] && selected[item.name]){
+    						valueNumber += item.detail[j];
+	    					if(bool){
+	    						wrapValueItem.label = {
+	    							normal:{show:true}
+			    				};
+			    				wrapValueItem.labelLine = {
+	    							normal:{show:true}	
+			    				};
+			    				bool = false;
+	    					}
+	    				}else{
+	    					wrapValueItem.value = 0;
+	    				}
+    					wrapValue.push(wrapValueItem);
+    				}
+    				if(selected[item.name]){
+    					item.value = valueNumber;
+    				}else{
+    					item.value = 0;
+    				}
+    				return item;
+    			})  		
+    			option.legend.data = name;
+    			option.legend.selected = selected;
+    			option.series[0].data = value;
+    			option.series[1].data = wrapValue;
+   				myCharts[2].setOption(option);
+   				myCharts[2].hideLoading();
+   				myCharts[2].on("legendselectchanged",function(result){
+   					var value = [],wrapValue = [];
+	    			for (var i in list) {
+	    				value.push({
+	    					name:i,
+	    					value:list[i]["总量"],
+	    					detail:sortObjectKeys(list[i])
+	    				})
+	    			}
+	    			value.sort(function(a,b){
+	    				return b.value - a.value;
+	    			}) 
+	    			value.map(function(item){
+	    				var valueNumber = 0;
+	    				var bool = true;
+	    				for(var j in item.detail){
+	    					if(j == '总量') continue;
+	    					var wrapValueItem ={
+		    					name:j,
+		    					value:item.detail[j]
+	    					};
+	    					if(result.selected[j] && result.selected[item.name]){
+	    						valueNumber += item.detail[j];
+		    					if(bool){
+		    						wrapValueItem.label = {
+		    							normal:{show:true}
+				    				};
+				    				wrapValueItem.labelLine = {
+		    							normal:{show:true}	
+				    				};
+				    				bool = false;
+		    					}
+		    				}else{
+		    					wrapValueItem.value = 0;
+		    				}
+	    					wrapValue.push(wrapValueItem);
+	    				}
+	    				if(result.selected[item.name]){
+	    					item.value = valueNumber;
+	    				}else{
+	    					item.value = 0;
+	    				}
+	    				return item;
+	    			})  		
+    				var Inoption = myCharts[2].getOption();
+	    			Inoption.series[0].data = value;
+	    			Inoption.series[1].data = wrapValue;
+   					myCharts[2].setOption(Inoption);
+   				})
+			}
+			function handelMap5(list){
+				var option = {
+				    title: {
+				        text: '时间点统计',
+				        subtext: '数据'
+				    },
+				    tooltip: {
+				        trigger: 'axis',
+				        axisPointer: {
+				            type: 'shadow'
+				        }
+				    },
+				    legend: {
+				        type: 'scroll',
+				        orient: 'vertical',
+					    right: 5,
+					    top: 20,
+					    bottom: 20,
+				        data:[],
+				    },
+				    grid: {
+				        left: '3%',
+				        right: '140px',
+				        bottom: '3%',
+				        containLabel: true
+				    },
+				    xAxis: {
+				        type: 'category',
+				        data: []
+				    },
+				    yAxis: {
+				        type: 'value'
+				    },
+				    series: []
+				};   			
+    			var name = [],lineName = [], value = {},line = {};
+    			for (var i in list) {
+    				name.push(i);
+    				for(var j in list[i]){
+    					if(!line[j]){
+    						line[j] = 0;
+    						value[j] = [];
+    					}
+    				}
+    			}
+    			for (var i in list) {
+    				for(var j in line){
+    					if(!list[i][j]){
+    						value[j].push(0);
+    					}else{
+    						value[j].push(list[i][j])
+    					}
+    				}
+    			}
+    			option.xAxis.data = name;
+    			for (var i in value) {
+    				if(i == "总量") continue;
+    				lineName.push(i)
+    				var item = {
+    					name:i,
+			            type:'bar',
+			            data:value[i],
+    				}
+    				option.series.push(item);
+    			}
+    			option.legend.data = lineName;
+   				myCharts[4].setOption(option);
+   				myCharts[4].hideLoading();
+   			}
+   			function handelMap5_2(city){
+   				var list = resultData.BaseTimeCityServerHourCount;
+				var option = myCharts[4].getOption();
+
+    			var name = [],lineName = [], value = {},line = {},series = [];
+    			for (var i of list) {
+    				name.push(i.Hour);
+    				for(var j of i.Server){
+    					if(!line[j.Name]){
+    						line[j.Name] = 0;
+    						value[j.Name] = [];
+    					}
+    				}
+    			}
+    			for (var i of list) {
+    				for(var j in line){
+    					var bool = false;
+    					for(var t of i.Server){
+	    					if(j == t.Name && t.City[city]){
+	    						value[j].push(t.City[city]);
+	    						bool = true;
+	    						break;
+	    					}
+	    				}
+    					if(!bool){
+    						value[j].push(0);
+    					}
+    				}
+    			}
+    			option.xAxis.data = name;
+    			for (var i in value) {
+    				if(i == "总量") continue;
+    				lineName.push(i)
+    				var item = {
+    					name:i,
+			            type:'bar',
+			            data:value[i],
+            			stack: '总量',
+			            label: {
+			                normal: {
+			                    show: false,
+			                }
+			            },
+    				}
+    				series.push(item);
+    			}
+    			option.legend.data = lineName;
+    			option.series = series;
+   				myCharts[4].setOption(option,true);
+   			}
+			function handelMap6(list){ 
+				var convertedData = [];
+				var option = {
+				backgroundColor: '#404a59',
+				animation: true,
+				animationDuration: 500,
+				animationEasing: 'cubicInOut',
+				animationDurationUpdate: 1000,
+				animationEasingUpdate: 'cubicInOut',
+				title: [
+				    {
+				        text: '全国救援案件量分布',
+				        left: 'center',
+				        textStyle: {
+				            color: '#fff'
+				        }
+				    },
+				    {
+				        id: 'statistic',
+				        right: 120,
+				        top: 40,
+				        width: 100,
+				        textStyle: {
+				            color: '#fff',
+				            fontSize: 16
+				        }
+				    }
+				],
+				toolbox: {
+				    iconStyle: {
+				        normal: {
+				            borderColor: '#fff'
+				        },
+				        emphasis: {
+				            borderColor: '#b1e4ff'
+				        }
+				    }
+				},
+				brush: {
+				    outOfBrush: {
+				        color: '#abc'
+				    },
+				    brushStyle: {
+				        borderWidth: 2,
+				        color: 'rgba(0,0,0,0.2)',
+				        borderColor: 'rgba(0,0,0,0.5)',
+				    },
+				    seriesIndex: [0, 1],
+				    throttleType: 'debounce',
+				    throttleDelay: 300,
+				    geoIndex: 0
+				},
+				geo: {
+				    map: 'china',
+				    left: '10',
+				    right: '10%',
+				    center: [117.98561551896913, 31.205000490896193],
+				    zoom: 2,
+				    label: {
+				        emphasis: {
+				            show: false
+				        }
+				    },
+				    roam: true,
+				    itemStyle: {
+				        normal: {
+				            areaColor: '#323c48',
+				            borderColor: '#111'
+				        },
+				        emphasis: {
+				            areaColor: '#2a333d'
+				        }
+				    }
+				},
+				grid: {
+				    right: 40,
+				    top: 100,
+				    bottom: 40,
+				    width: '30%'
+				},
+				xAxis: {
+				    type: 'value',
+				    scale: true,
+				    position: 'top',
+				    boundaryGap: false,
+				    splitLine: {show: false},
+				    axisLine: {show: false},
+				    axisTick: {show: false},
+				    axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+				},
+				yAxis: {
+				    type: 'category',
+				    name: '',
+				    nameGap: 16,
+				    axisLine: {show: false, lineStyle: {color: '#ddd'}},
+				    axisTick: {show: false, lineStyle: {color: '#ddd'}},
+				    axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
+				    data: []
+				},	            
+				tooltip : {
+			        trigger: 'axis',
+			        axisPointer: {
+			            type: 'shadow'
+			        }
+				},
+				series : [
+				    {		
+						tooltip:{
+							trigger:'item',
+						    formatter:function(params){
+						    	return params.name + "<br/> 总量："+params.value[2];
+						    },
+						},
+				        name: '地区',
+				        type: 'effectScatter',
+				        coordinateSystem: 'geo',
+				        data: [],
+				        symbolSize: function (val) {
+				            return 8;
+				        },
+				        rippleEffect: {
+				            brushType: 'stroke'
+				        },
+				        hoverAnimation: true,
+				        label: {
+				            normal: {
+				                formatter: '{b}    ',
+				                position: 'left',
+				                show: true
+				            }
+				        },
+				        itemStyle: {
+				            normal: {
+				                color: '#ddb926'
+				            }
+				        }
+				    },
+				    {
+						tooltip:{
+							trigger:'item',
+						    formatter:function(params){
+						    	return params.name + "<br/> 总量："+params.value[2];
+						    },
+						},
+				        name: 'Top 5',
+				        type: 'effectScatter',
+				        coordinateSystem: 'geo',
+				        data: [],
+				        symbolSize: function (val) {
+				            return 20;
+				        },
+				       /* showEffectOn: 'emphasis',*/
+				        rippleEffect: {
+				            brushType: 'stroke'
+				        },
+				        hoverAnimation: true,
+				        label: {
+				            normal: {
+				                formatter: '{b}  ',
+				                position: 'left',
+				                show: true
+				            }
+				        },
+				        itemStyle: {
+				            normal: {
+				                color: '#f4e925',
+				                shadowBlur: 10,
+				                shadowColor: '#333'
+				            }
+				        },
+				        zlevel: 1
+				    },
+				    {
+				        id: 'bar',
+				        zlevel: 2,
+				        symbol: 'none',
+				        type: 'bar',
+				        data: []
+				    }
+				]
+				};
+				function renderBrushed(params) {
+
+					var mainSeries = params.batch[0].selected[0];
+
+					var selectedItems = [];
+					var categoryData = [];
+					var barData = [];
+					var maxBar = 8;
+					var sum = 0;
+					var count = 0;
+
+					for (var i = 0; i < mainSeries.dataIndex.length; i++) {
+					    var rawIndex = mainSeries.dataIndex[i];
+					    var dataItem = convertedData[0][rawIndex];
+					    var pmValue = dataItem.value[2];
+
+					    sum += pmValue;
+					    count++;
+
+					    selectedItems.push(dataItem);
+					}
+					selectedItems.sort(function (a, b) {
+					    return a.value[2] - b.value[2];
+					});
+					if(mainSeries.dataIndex.length >= maxBar){
+						selectedItems = selectedItems.slice((0-maxBar));
+					}
+					var INoption = option.series.slice(0,2);
+					var INvalue = {},INline = {};
+	    			for (var i in selectedItems) {
+	    				for(var j in selectedItems[i].detail){
+	    					if(!INline[j]){
+	    						INline[j] = 0;
+	    						INvalue[j] = [];
+	    					}
+	    				}
+	    			}
+	    			for (var i in selectedItems) {
+	    				categoryData.push(selectedItems[i].name);
+	    				for(var j in INline){
+	    					if(!selectedItems[i].detail[j]){
+	    						INvalue[j].push(0);
+	    					}else{
+	    						INvalue[j].push(selectedItems[i].detail[j])
+	    					}
+	    				}
+	    			}
+	    			for (var i in INvalue) {
+	    				if(i == "总量") continue;
+	    				var item = {
+	    					name:i,
+				            type:'bar',
+				            data:INvalue[i],
+	            			stack: '总量',	   
+				            label: {
+				                normal: {
+				                    show: false,
+				                }
+				            }
+	    				}
+	    				INoption.push(item);
+	    			}
+					this.setOption({
+					    xAxis: {
+					        type: 'value'
+					    },	
+					    yAxis: {
+				        	type: 'category',
+					        data:categoryData
+					    },	
+					    title: {
+					        id: 'statistic',
+					        text: '城市案件详细数据',
+					        right:"12%"
+					    },
+					    series:INoption
+					});
+				}
+	            var name = [],value = [];
+	            for (var i in list) {
+	            	name.push(i);
+	            	var item = {
+	            		name:i,
+	            		value:list[i]["总量"],
+	            		detail:list[i]
+	            	}
+	            	value.push(item)
+	            } 
+				myCharts[5].on('brushselected', renderBrushed);
+				myCharts[5].on("geoRoam",function(){
+				    var option2 = myCharts[5].getOption();
+				    if(option2.geo[0].zoom < 1.5){
+					    option2.series[0].label.normal.show = false;
+					    option2.series[0].label.emphasis.show = false;
+					    option2.series[1].label.normal.show = false;
+					    option2.series[1].label.emphasis.show = false;
+					}else{
+					    option2.series[0].label.normal.show = true;
+					    option2.series[0].label.emphasis.show = true;
+					    option2.series[1].label.normal.show = true;
+					    option2.series[1].label.emphasis.show = true;
+					}
+				    myCharts[5].setOption(option2,true);				    
+				})
+				$.get('./json/ACity.json', function (geoCoordMap) { 
+					try{
+						geoCoordMap = JSON.parse(geoCoordMap);
+					}catch(e){
+						console.log("json数据为Object")
+					}
+					var convertData = function (data) {
+					    var res = [];
+					    for (var i = 0; i < data.length; i++) {
+					        var geoCoord = geoCoordMap[data[i].name];
+					        if (geoCoord) {
+					            res.push({
+					                name: data[i].name,
+					                value: geoCoord.concat(data[i].value),
+					                detail:data[i].detail
+					            });
+					        }
+					    }
+					    return res;
+					};
+					convertedData = [
+					    convertData(value),
+					    convertData(value.sort(function (a, b) {
+					        return b.value - a.value;
+					    }).slice(0, 10))
+					];
+               		option.series[0].data = convertedData[0];
+               		option.series[1].data =  convertedData[1];
+        			myCharts[5].hideLoading();
+	   				myCharts[5].setOption(option);
+	   			})
+   			}
+   			function handelMap7(list){
+   				var  option = {
+				    title: {
+				        text: '全国救援热力分布',
+				        left: 'center',
+				        textStyle: {
+				            color: '#fff'
+				        }
+				    },
+				    backgroundColor: '#404a59',
+				    visualMap: {
+				        min: 0,
+				        max: 50,
+				        splitNumber: 10,
+				        inRange: {
+				            color: ['#d94e5d','#eac736','#50a3ba'].reverse()
+				        },
+				        textStyle: {
+				            color: '#fff'
+				        }
+				    },
+				    tooltip:{
+				    	show:false
+				    },
+				    geo: {
+				        map: 'china',
+				        label: {
+				        	normal:{
+				            	color: '#999',
+				        		show:true
+				        	},
+				            emphasis: {
+				            	color: '#999',
+				                show: false
+				            }
+				        },
+				        roam: true,
+				        zoom: 1.4,
+				        itemStyle: {
+				            normal: {
+				                areaColor: '#323c48',
+				                borderColor: '#111'
+				            },
+				            emphasis: {
+				                areaColor: '#2a333d'
+				            }
+				        }
+				    },
+				    series: [{
+				        name: 'AQI',
+				        type: 'heatmap',
+				        coordinateSystem: 'geo',
+				        data:[]
+				    }]
+				}       	
+	            var name = [],value = [];
+	            for (var i in list) {
+	            	name.push(i);
+	            	var item = {
+	            		name:i,
+	            		value:list[i]["总量"],
+	            		detail:list[i]
+	            	}
+	            	value.push(item)
+	            }
+				$.get('./json/ACity.json', function (geoCoordMap) { 
+					try{
+						geoCoordMap = JSON.parse(geoCoordMap);
+					}catch(e){
+						console.log("json数据为Object")
+					}
+					var convertData = function (data) {
+					    var res = [];
+					    for (var i = 0; i < data.length; i++) {
+					        var geoCoord = geoCoordMap[data[i].name];
+					        if (geoCoord) {
+					            res.push({
+					                name: data[i].name,
+					                value: geoCoord.concat(data[i].value),
+					                detail:data[i].detail
+					            });
+					        }
+					    }
+					    return res;
+					};
+               		option.series[0].data = convertData(value);
+        			myCharts[6].hideLoading();
+	   				myCharts[6].setOption(option);
+	   			})				
+   			}
+			/*初始化echarts实例*/			
+	        var myCharts = [];
+	        for (var i = 0; i < 7; i++) {
+	        	if($(".mapType"+i).get(0)){
+	        		myCharts[i] = echarts.init($(".mapType"+i).get(0));
+	        		myCharts[i].showLoading();
+	        	}
+	        }	        	
+	        /*使用制定的配置项和数据显示图表*/
+	        // $.ajax({
+	        // 	url:urlIp+"/api/v1/BaseTimeCaseCount",
+	        // 	type:"GET",
+	        // 	data:{},
+	        // 	dataType:"json",
+	        // 	success:function(Result){
+	        // 		$(".wrap").slideDown();
+	        // 		if(Result.status == "200"){
+	        // 			resultData =  Result.data;
+	        // 			handelMap1(resultData.BaseTimeCaseCount);
+	        // 			handelMap2(resultData.BaseTimeCaseDistanceCount);
+	        // 			handelMap3(resultData.BaseTimeCaseServerTypeCount);
+	        // 			handelMap5(resultData.BaseTimeDateScopeCount);
+	        // 			handelMap6(resultData.BaseTimeMapCount);
+	        // 			handelMap7(resultData.BaseTimeMapCount);
+	        // 			for (var i = resultData.CityTotal.length - 1; i >= 0; i--) {
+	        // 				var dom = "<option value="+resultData.CityTotal[i]+">"+resultData.CityTotal[i]+"</option>";
+	        // 				$("#timeCity").append(dom);
+	        // 			}
+	        // 			$("#timeCity").show();
+	       	// 		}else{
+	        // 			alert(Result.message);
+	       	// 		}
+	        // 	},
+	        // 	error:function(){
+	        // 		alert("网络出错！")
+	        // 	}
+	        // })
+	        $.get('./json/data.json', function (Result) { 
+				try{
+					Result = JSON.parse(Result);
+				}catch(e){
+					console.log("json数据为Object")
+				}
+	        	if(Result.status == "200"){
+					resultData =  Result.data;
+	    			handelMap1(resultData.BaseTimeCaseCount);
+	    			handelMap2(resultData.BaseTimeCaseDistanceCount);
+	    			handelMap3(resultData.BaseTimeCaseServerTypeCount);
+	    			handelMap5(resultData.BaseTimeDateScopeCount);
+	    			handelMap6(resultData.BaseTimeMapCount);
+	    			handelMap7(resultData.BaseTimeMapCount);
+	    			for (var i = resultData.CityTotal.length - 1; i >= 0; i--) {
+	    				var dom = "<option value="+resultData.CityTotal[i]+">"+resultData.CityTotal[i]+"</option>";
+	    				$("#timeCity").append(dom);
+	    			}
+	    			$("#timeCity").show();
+	       		}else{
+	        		alert(Result.message);
+	       		}
+			});
+	        $("body").on("change","#timeCity",function(){
+	        	var city = $(this).val();
+	        	if(city == 0){
+	        		handelMap5(resultData.BaseTimeDateScopeCount);	        	
+	        	}else{
+	        		handelMap5_2(city);
+	        	}
+	        }).on("click",".tab a",function(){
+	        	var index = $(this).index();
+	        	$(".tab a").removeClass("active").eq(index).addClass('active');
+	        	$(this).parents(".tab").find(".map").addClass('hide').eq(index).removeClass('hide');
+	        	myCharts[5+index].resize();
+	        })
+		})
+	</script>
+</body>
+</html>

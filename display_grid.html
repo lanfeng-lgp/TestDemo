@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>grid 网格</title>
+	<style>
+		.gridbox{
+			display: grid;
+			  grid-template-columns: 100px 100px 100px;
+			  grid-template-rows: 100px 100px 100px;
+			  grid-template-areas: 'a b c'
+			                       'd e f'
+			                       'g h i';
+		}
+	</style>
+</head>
+<body>
+	<div class="gridbox">
+		<div class="item item1"></div>
+		<div class="item item2"></div>
+		<div class="item item3"></div>
+		<div class="item item4"></div>
+		<div class="item item5"></div>
+		<div class="item item6"></div>
+		<div class="item item7"></div>
+		<div class="item item8"></div>
+		<div class="item item9"></div>
+	</div>
+</body>
+<script>
+	var list = document.querySelectorAll(".item");
+	for (var i = 0; i < list.length; i++) {
+		list[i].style.backgroundColor = "rgba("+(parseInt(255*Math.random()))+","+(parseInt(255*Math.random()))+","+(parseInt(255*Math.random()))+",0.6)";
+	}
+
+</script>
+</html>

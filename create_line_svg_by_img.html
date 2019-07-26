@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>生成line_svg</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<style>	
+			.img{
+				width: 600px;
+				height: 600px;
+				overflow:hidden;
+				box-sizing: content-box;
+			}
+			.img img{
+				width: 100%;
+			}
+		</style>
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 my-4">
+	<h2>通过线条图片生成svg</h2>
+	<div class="row">
+		<div class="col img">
+			<img src="./images/1.jpg" alt="">
+		</div>
+		<div class="col svg"></div>
+	</div>
+	<div class="mt-4">
+		<button id="btn1" class="btn btn-primary" type="button">生成svg</button>
+		<button id="btn2" class="btn btn-primary" type="button">取消上一步</button>
+		<button id="btn3" class="btn btn-primary" type="button">清空数据</button>
+	</div>
+	<div class="mt-4 form-group hide">
+		<textarea class="form-control"></textarea>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<!-- <script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script> -->
+	<script type="text/javascript">
+		var drawLinePoint = [];
+		function drawLine(){
+	    	if(drawLinePoint.length <2){
+	    		console.log("至少两点");
+	    		return;
+	    	}
+	    	var dom = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,600,600" style="width:450px;height:450px;">';
+	    	dom += '	<polyline points="';
+	    	for (var i = 0; i < drawLinePoint.length; i++) {
+	    		var item = drawLinePoint[i];
+	    		dom+= item.x+','+item.y+' ';
+	    		
+	    	}
+	    	dom += '" style="fill:transparent;stroke:#2e6fd7;stroke-width:1;" />'
+	    	dom += '</svg>'
+	    	$(".svg").html(dom);
+
+		}
+		$(document).ready(function(){
+			$("body").on("click",function(event){
+				var img = $(".img img").eq(0).offset();
+				drawLinePoint.push({
+					x:event.clientX - img.left,
+					y:event.clientY - img.top
+				});
+				drawLine();
+			})
+		    $("body").on("click", "#btn1", function() {
+		    	if(drawLinePoint.length <2){
+		    		console.log("至少两点");
+		    		return;
+		    	}
+		    	var dom = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,600,600" style="width:450px;height:450px;">';
+		    	dom += '	<polyline points="';
+		    	for (var i = 0; i < drawLinePoint.length; i++) {
+		    		var item = drawLinePoint[i];
+		    		dom+= item.x+','+item.y+' ';
+		    		
+		    	}
+		    	dom += '" style="fill:transparent;stroke:#2e6fd7;stroke-width:1;" />'
+		    	dom += '</svg>'
+		    	$("textarea").html(dom).parent().show();
+		    	return false;
+		    })
+		    $("body").on("click", "#btn2", function() {
+		    	drawLinePoint.pop();
+		    	if(drawLinePoint.length == 1){
+		    		$(".svg").html("");
+		    	}else{
+		    		drawLine();
+		    	}
+		    	return false;
+		    })
+		    $("body").on("click", "#btn3", function() {
+		    	drawLinePoint = [];
+		    	$(".svg").html("");
+		    	return false;
+		    })
+
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+/*车牌输入*/
+#keyboard_wrap{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	font-size:16px;
+	color: #444;
+}
+#keyboard_wrap .bg{
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+#keyboard_pro{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 110;
+	width: 100%;
+	font-size:1em;
+}
+.ul_pro{
+	margin: 0;
+	background-color:#F0F0F0;
+	text-align:center;
+	padding:0.25em 0.25em; 
+	list-style: none;
+	overflow:hidden;
+}
+.ul_pro li{ 
+	display: inline-block;
+	float:left; 
+	width:11.11%; 
+	padding:0.18em;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+.ul_pro li:nth-of-type(10){
+	margin-left: 5.55%;
+}
+.ul_pro li:nth-of-type(18){
+	margin-left: 5.55%;
+}
+.ul_pro .li_clean{
+	color:#3d4b58;	
+}
+.ul_pro .li_close{  
+	float:right; 
+	width:22.22%;
+	color:#3d4b58;
+}
+.ul_pro li span{ 
+	display:block; 
+	background-color:#fff; 
+	-webkit-border-radius:0.125em; 
+	   -moz-border-radius:0.125em; 
+	        border-radius:0.125em;
+	line-height:2em; 
+	padding-top:0.125em;
+	cursor: pointer;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.ul_pro li span:active{ 
+	background-color:#3D4B58; 
+	color:#fff;
+}
+.ul_input li{
+	float:left;
+	width: 12%;
+	display: inline-block;
+	text-align: center;
+}
+.ul_input li span{ 
+	display:block; 
+	margin:0 auto; 
+	width:100%; 
+	height: 2.5em;
+	text-align: center;
+	line-height:2.5em; 
+}
+.ul_keybord{ 
+	margin: 0;
+	background-color:#F0F0F0;
+	text-align:center; 
+	padding:0.25em 0.25em; 
+	list-style: none;
+	overflow:hidden;
+}
+.ul_keybord li{ 
+	float:left; 
+	width:10%; 
+	padding:0.125em; 
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	font-weight: bolder;
+}
+.ul_keybord li:last-child{ 
+	font-weight: normal;
+}
+.ul_keybord .ikey20{ 
+	margin-left:5%;
+}
+.ul_keybord .li_w{ 
+	width:11.11%;
+}
+.ul_keybord .li_close{  
+	float:right; 
+	width:22.22%;
+}
+.ul_keybord .li_close span{ 
+	background-color:#ACB3BB;
+}
+.ul_keybord .li_clean{  
+	float:right; 
+	width:22.22%;
+}
+.ul_keybord li span{ 
+	display:block; 
+	background-color:#fff; 
+	-webkit-border-radius:0.25em; 
+	   -moz-border-radius:0.25em; 
+	        border-radius:0.25em;
+	line-height:2em; 
+	padding-top:0.125em;  
+	cursor: pointer;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.ul_keybord li span:active{
+	background-color:#3D4B58; 
+	color:#fff;
+}
+/*下部安全距离*/
+.ul_keybord,.ul_pro{
+	padding-bottom: calc(env(safe-area-inset-bottom) + 0.25em);
+}

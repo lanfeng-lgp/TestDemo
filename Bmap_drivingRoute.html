@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head>
+		<title>百度驾车导航</title>
+		<meta charset="utf-8">
+		<meta name="full-screen" content="yes">
+		<meta name="renderer" content="webkit">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="screen-orientation" content="portrait">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<style>
+			#mapLine{
+				margin: 30px auto;
+				width: 800px;
+				height: 800px;
+				background-color: #f2F2F2;
+			}				
+		</style>
+	</head>
+</head>   
+<body ontouchstart="" onmouseover="" class="mx-4 my-4">	
+	<h2>两点之间导航</h2>
+	<div id="mapLine"></div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://api.map.baidu.com/api?v=2.0&ak=yLeFoqbRlyGcPMdG5oDsU1xavdrsh37l&s=1"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var map = new BMap.Map("mapLine");    // 创建Map实例
+			map.centerAndZoom("深圳市", 12);  // 初始化地图,设置中心点坐标和地图级别
+			map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+			//向地图添加控件
+			map.addControl(new BMap.NavigationControl());//平移缩放控件，默认在地图左上方
+			map.addControl(new BMap.ScaleControl());//比例尺控件，默认在地图左下方
+			map.addControl(new BMap.OverviewMapControl());//缩略图控件，默认在地图右下方
+
+	        var point1 = new BMap.Point(104.0929096013,30.7612637591);
+	        var point2 = new BMap.Point(104.1102100000,30.5940300000);
+
+			 /*轨迹 百度导航路径*/
+		    var searchComplete = function (results){
+		    	console.log(results)
+		        if (driving.getStatus() != BMAP_STATUS_SUCCESS){
+		            return ;
+		        }
+		        var plan = results.getPlan(0);
+		        var route = plan.getRoute(0);
+		        for (var i = 0; i < route.getNumSteps(); i++) {
+		        	console.log("第"+i+'点',route.getStep(i).getPosition())
+		        }
+		        var html = '司机距您还有<span>' + plan.getDistance(true) + '</span>，';
+		            html += '预计将在<span>' + plan.getDuration(true) + '</span>抵达';
+		        if($("#btnCancel").attr("status")==3){
+		        	$('.case-status2 p').html(html);
+		        }
+		    }
+		    var driving = new BMap.DrivingRoute(map, {renderOptions: {map: map},
+		        onSearchComplete: searchComplete,
+		        onPolylinesSet:function(routes) {
+		            var searchRoute = routes[0].getPolyline();//导航路线
+		            searchRoute.setStrokeColor('#1188D2');
+		            searchRoute.setStrokeOpacity(1);
+		            searchRoute.setStrokeWeight(4);
+		            map.addOverlay(searchRoute);
+		        },
+		        onMarkersSet:function(routes) {
+		        }
+		    });
+			driving.search(point1, point2); 
+			return;
+
+		})
+	</script>
+</body>
+</html>

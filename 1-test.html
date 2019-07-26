@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    	.task_allot .allot_title{
+    		width: 240px;
+    	}
+    	.task_allot .allot_title h4{
+    		font-weight: bold;
+    		margin:0; 
+    	}
+    	.task_allot .allot_add {
+    		width: 250px;
+    	}
+    	.task_allot .allot_add span{
+    		padding-top: 6px;
+    	}
+    	.task_allot .allot_add select.form-control{
+			width: 150px;
+    	}
+    	.task_allot .allot_people .part_wrap{
+    		width: 280px;
+    		margin-bottom: 8px;
+    	}
+    	.task_allot .allot_people .part{
+    		width: 203px;
+    		border:1px solid #ddd;
+    	}
+		.task_allot .allot_people .part .left{
+			width: 150px;
+			line-height: 40px;
+			text-align: center;
+			background: #FF9208;
+			color: #FFF;
+			position: relative;
+		}
+		.task_allot .allot_people .gray .part .left{
+			background-color: #909090;
+		}
+		.task_allot .allot_people .part .left .del{
+			position: absolute;
+			left: 0;
+			top: 0;
+			cursor: pointer;
+			width: 100%;
+			height: 100%;
+			display: none;
+			font-size: 20px;
+			background: rgba(0,0,0,0.4);
+		}
+		.task_allot .allot_people .part .left:hover .del{
+			display: block;
+		}
+		.task_allot .allot_people .part .right{
+			width: 50px;
+		}
+		.task_allot .allot_people .part .right input{
+			width: 50px;
+			height: 40px;
+			padding-left: 10px;
+			text-align: center;
+			font-size: 18px;
+			border: none;
+			outline: none;
+		}
+		.task_allot .allot_people .bili{
+			padding-top: 18px;
+			padding-left: 5px;
+			font-size: 16px;
+			margin: 0;
+		}
+    </style>
+  </head>
+  <body>
+  	<div>
+  		<table class="table table-condensed task_allot">
+  			<tr>
+  				<td class="text-center allot_title">
+  					<h4>AB点任务</h4>
+  					<p>(7日平均日单量：150)</p>
+  				</td>
+  				<td class="clearfix allot_add">
+  					<span class="pull-left">新增人员 </span>
+  					<select class="form-control">
+					  <option>1</option>
+					  <option>2</option>
+					  <option>3</option>
+					  <option>4</option>
+					  <option>5</option>
+					</select>
+  				</td>
+  				<td class="clearfix allot_people">
+					<div class="pull-left part_wrap">
+						<div class="clearfix pull-left part">
+							<div class="pull-left left">
+								<span>佩尔森</span>
+								<div class="del">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>				
+							</div>
+							<div class="pull-left right">
+								<input type="number" value="1">
+							</div>
+						</div>
+						<p class="text-warning pull-left bili">(20%)</p>						
+					</div>
+					<div class="pull-left part_wrap">
+						<div class="clearfix pull-left part">
+							<div class="pull-left left">
+								<span>佩尔森</span>
+								<div class="del">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>				
+							</div>
+							<div class="pull-left right">
+								<input type="number" value="1">
+							</div>
+						</div>					
+					</div>
+					<div class="pull-left part_wrap gray">
+						<div class="clearfix pull-left part">
+							<div class="pull-left left">
+								<span>佩尔森</span>
+								<div class="del">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>				
+							</div>
+							<div class="pull-left right">
+								<input type="number" value="1">
+							</div>
+						</div>
+						<p class="text-warning pull-left bili">(20%)</p>						
+					</div>
+  				</td>
+  			</tr>
+  		</table>
+
+
+  	</div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script>
+		$(document).ready(function(){
+
+		})
+	</script>
+</body>
+</html>
