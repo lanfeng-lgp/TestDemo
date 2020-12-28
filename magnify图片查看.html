@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Magnify Examples</title>
+  <!-- Bootstrap -->
+  <link href="./library/magnify/jquery.magnify.min.css" rel="stylesheet">
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <style>
+  .magnify-modal{box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.3);}
+  .magnify-header .magnify-toolbar {background-color: rgba(0, 0, 0, .5);}
+  .magnify-stage {top: 0; right: 0; bottom: 0; left: 0; border-width: 0; }
+  .magnify-footer .magnify-toolbar {background-color: rgba(0, 0, 0, .5); border-top-left-radius: 5px; border-top-right-radius: 5px; }
+  .magnify-header, .magnify-footer {pointer-events: none; }
+  .magnify-button {pointer-events: auto; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="image-set">
+      <a data-magnify="gallery" data-caption="Rémi Bizouard triple champion du monde by malainxx24" href="images/a1.png">
+        <img width="200"  src="images/a1.png" alt="">
+      </a>
+      <a data-magnify="gallery" data-caption="A SELFROOME by MASSILIA JMMC" href="images/a2.png">
+        <img width="200"  src="images/a2.png" alt="">
+      </a>
+      <a data-magnify="gallery" data-caption="Paraglider flying over Aurlandfjord, Norway by framedbythomas" href="images/a3.png">
+       <img width="200"  src="images/a3.png" alt="">
+      </a>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="./library/magnify/jquery.magnify.min.js"></script>
+  <script>
+  $('[data-magnify]').magnify({
+    headToolbar: [
+      'close'
+    ],
+    footToolbar: [
+      'zoomIn',
+      'zoomOut',
+      'prev',
+      'fullscreen',
+      'next',
+      'actualSize',
+      'rotateRight'
+    ],
+    title: false
+  });
+
+  </script>
+</body>
+</html>

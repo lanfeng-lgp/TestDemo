@@ -1,0 +1,15 @@
+Chrome插件安装时出现的“程序包无效”
+
+Chrome插件网为用户带来一种解决方法来解决上述问题，具体的操作方法如下：
+
+1.把下载后的.crx扩展名的离线Chrome插件的文件扩展名改成.zip或者.rar；
+
+2.右键点击该文件，并使用压缩软件（如winrar、好压、360压缩等）对该压缩文件进行解压，并保存到系统的一个同名文件夹下；
+
+3.在Chrome的地址栏中输入：chrome://extensions/ 使用开发者模式，选择“加载正在开发的扩展程序”，选择刚刚解压的Chrome插件文件夹；
+
+4.Chrome插件就会成功加载到谷歌浏览器中。
+
+5.如果出现这种情况Chrome浏览器会提示无法加载以下来源的扩展程序： xxx路径（Chrome插件文件的解压位置）Cannot load extension with file or directory name _metadata. Filenames starting with "_" are reserved for use by the system.出现这种情况，是因为这款Chrome插件与新版的Chrome浏览器有些不兼容，这时候，用户可以打开刚刚解压的Chrome插件文件夹，并把其中_metadata文件夹的名字修改为metadata（把前面的下划线去掉）
+
+6.更新文件夹名称成功以后，点击该错误提示下方的“重试”按钮，就可以成功地把Chrome插件加载谷歌浏览器中了
