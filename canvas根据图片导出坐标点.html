@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <title>Test</title>
+        <meta charset="utf-8">
+        <meta name="full-screen" content="yes">
+        <meta name="renderer" content="webkit">
+        <meta name="x5-orientation" content="portrait">
+        <meta name="screen-orientation" content="portrait">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+        <style type="text/css">
+            .img{
+                position: relative;
+                overflow: hidden;
+                font-size: 0;line-height: 0;
+            }
+            .bg-img{
+                float: left;
+            }
+            #svg,#canvas{
+                position: absolute;left: 0;top: 0;
+            }
+            #svg{
+                z-index: 5;
+            }
+            #canvas{
+                width: 900px;
+                height: 900px;
+                z-index: 10;
+            }
+            .btn-wrap button{padding: 0 20px;line-height: 40px; font-size: 16px; color: #FFFFFF; text-align: center; background: #3d4b58; border-radius: 4px; border: none; outline: none; cursor: pointer; user-select: none;}
+            .btn-wrap button:active{background: #475b6d;}
+            .btn-wrap{
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+</head>   
+<body ontouchstart="" onmouseover="" class="">
+    <div class="img">
+        <img class="bg-img" src="http://www.outsharked.com/imagemapster/examples/images/vegetables.jpg" alt="">
+        <svg id="svg"  height="900" width="900">
+          <polygon points="" style="fill:rgb(0,200,0,0.8);stroke:#00ffbe;stroke-width:1"/>
+        </svg>
+        <canvas id="canvas" width="900" height="900"></canvas>
+    </div>
+    <div class="btn-wrap">
+        <button type="button" id="return">撤销</button>
+        <button type="button" id="drawSvg">SVG 绘制</button>
+        <button type="button" id="drawCanvas">canvas 绘制</button>
+        <button type="button" id="clearData">清空数据</button>
+        <button type="button" id="clearDraw">清空绘画</button>
+        <button type="button" id="explor">导出数据</button>        
+    </div>
+    <div class="list">
+        
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        let pointList = [{"x":145,"y":125},{"x":27,"y":169},{"x":37,"y":202},{"x":52,"y":198},{"x":72,"y":193},{"x":48,"y":211},{"x":45,"y":232},{"x":60,"y":242},{"x":56,"y":258},{"x":74,"y":260},{"x":77,"y":268},{"x":62,"y":283},{"x":72,"y":297},{"x":81,"y":302},{"x":98,"y":291},{"x":98,"y":303},{"x":123,"y":317},{"x":128,"y":310},{"x":148,"y":288},{"x":159,"y":253},{"x":165,"y":225},{"x":149,"y":224},{"x":141,"y":204},{"x":146,"y":181},{"x":141,"y":169},{"x":160,"y":171},{"x":180,"y":182},{"x":187,"y":173},{"x":183,"y":154},{"x":179,"y":137},{"x":165,"y":148},{"x":149,"y":139},{"x":144,"y":125}];
+        $(document).ready(function(){
+            var drawCanvas=document.getElementById("canvas");
+            var drawCxt=drawCanvas.getContext("2d");
+            drawCxt.strokeStyle = '#0022af';
+            $("#canvas").on("click", function(event) {
+                let origin = $(".img").offset();
+                let point = {};
+                point.x = event.clientX - origin.left;
+                point.y = event.clientY - origin.top;
+                pointList.push(point);
+            })
+            $("body").on("click","#return", function(event) {
+                pointList.pop();
+                if($(".list").html()){
+                    $(".list").html(JSON.stringify(pointList))
+                }                
+            });
+            $("body").on("click","#clearDraw", function(event) {
+                $("#svg polygon").attr("points","");
+                drawCxt.clearRect(0,0,drawCanvas.width,drawCanvas.height); 
+            });
+            $("body").on("click","#clearData", function(event) {
+                pointList = [];
+                $("#svg polygon").attr("points","");
+                drawCxt.clearRect(0,0,drawCanvas.width,drawCanvas.height); 
+                $(".list").html('');
+            });
+            $("body").on("click","#drawSvg", function(event) {
+                let polygon = [];
+                pointList.map((item)=>{
+                    polygon.push(item.x +','+ item.y)
+                })
+                polygon.push(pointList[0].x +','+ pointList[0].y)
+                polygon = polygon.join(" ");
+                $("#svg polygon").attr("points",polygon);
+            });
+            $("body").on("click","#drawCanvas", function(event) {
+                drawCxt.clearRect(0,0,drawCanvas.width,drawCanvas.height); 
+                if(pointList.length < 2 ){
+                    return;
+                }
+                pointList.forEach( function(item, index) {
+                    if(index == 0){
+                        drawCxt.moveTo(item.x,item.y);
+                    }else{
+                        drawCxt.lineTo(item.x,item.y);
+                    }
+                });
+                drawCxt.stroke();
+            });
+            $("body").on("click","#explor",function(event){
+                $(".list").html(JSON.stringify(pointList))                
+            })
+        })
+    </script>
+</body>
+</html>

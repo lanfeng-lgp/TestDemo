@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>sublime txt3 快捷键</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css" media="screen">
+    body {
+        padding-top: 60px;
+        background: #222;
+        color: #FFFF;
+        font-size: 18px;
+        color: #d0d0d0;
+    }
+    .content{
+        width: 1740px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .content .w50{
+        padding:0 50px;
+        width: 50%;float: left;
+        box-sizing: border-box;
+    }
+    .content .w100{
+        padding:0 50px;
+        width: 100%;float: left;
+        box-sizing: border-box;
+    }
+    h1{
+        text-align: center;
+    }
+    h3{
+        color: #ffa534;
+    }
+    h3 + div{
+        overflow: hidden;
+    }
+    .key{
+        float: left;
+        width: 20%;
+        color: #d42a00;
+    }
+    .info{
+        float: left;
+        width: 80%;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>Sublime Text 快捷键</h1>
+    <div class="content">
+        <div class="w50">
+            <h3>选择类</h3>
+            <div>
+                <div class="key">Ctrl+D </div><div class="info">选中光标所占的文本，继续操作则会选中下一个相同的文本。</div>
+                <div class="key">Alt+F3 </div><div class="info">选中文本按下快捷键，即可一次性选择全部的相同文本进行同时编辑。</div>
+                <div class="key">Ctrl+L </div><div class="info">选中整行，继续操作则继续选择下一行，效果和 Shift+↓ 效果一样。</div>
+                <div class="key">Ctrl+Shift+L </div><div class="info">先选中多行，再按下快捷键，会在每行行尾插入光标，即可同时编辑这些行。</div>
+                <div class="key">Ctrl+Shift+M </div><div class="info">选择括号内的内容（继续选择父括号）。</div>
+                <div class="key">Ctrl+M </div><div class="info">光标移动至括号内结束或开始的位置。</div>
+                <div class="key">Ctrl+Enter </div><div class="info">在下一行插入新行。</div>
+                <div class="key">Ctrl+Shift+Enter </div><div class="info">在上一行插入新行。</div>
+                <div class="key">Ctrl+Shift+[ </div><div class="info">选中代码，按下快捷键，折叠代码。</div>
+                <div class="key">Ctrl+Shift+] </div><div class="info">选中代码，按下快捷键，展开代码。</div>
+                <div class="key">Ctrl+K+0 </div><div class="info">展开所有折叠代码。</div>
+                <div class="key">Ctrl+← </div><div class="info">向左单位性地移动光标，快速移动光标。</div>
+                <div class="key">Ctrl+→ </div><div class="info">向右单位性地移动光标，快速移动光标。</div>
+                <div class="key">shift+↑ </div><div class="info">向上选中多行。</div>
+                <div class="key">shift+↓ </div><div class="info">向下选中多行。</div>
+                <div class="key">Shift+← </div><div class="info">向左选中文本。</div>
+                <div class="key">Shift+→ </div><div class="info">向右选中文本。</div>
+                <div class="key">Ctrl+Shift+← </div><div class="info">向左单位性地选中文本。</div>
+                <div class="key">Ctrl+Shift+→ </div><div class="info">向右单位性地选中文本。</div>
+                <div class="key">Ctrl+Shift+↑ </div><div class="info">将光标所在行和上一行代码互换（将光标所在行插入到上一行之前）。</div>
+                <div class="key">Ctrl+Shift+↓ </div><div class="info">将光标所在行和下一行代码互换（将光标所在行插入到下一行之后）。</div>
+                <div class="key">Ctrl+Alt+↑ </div><div class="info">向上添加多行光标，可同时编辑多行。</div>
+                <div class="key">Ctrl+Alt+↓ </div><div class="info">向下添加多行光标，可同时编辑多行。</div>
+            </div>
+            <h3>搜索类</h3>
+            <div>
+                <div class="key">Ctrl+F </div><div class="info">打开底部搜索框，查找关键字。</div>
+                <div class="key">Ctrl+shift+F </div><div class="info">在文件夹内查找。</div>
+                <div class="key">Ctrl+P </div><div class="info">打开搜索框。</div>
+                <div class="key">Ctrl+G </div><div class="info">打开搜索框，自动带：，输入数字跳转到该行代码。</div>
+                <div class="key">Ctrl+R </div><div class="info">打开搜索框，自动带@，输入关键字，查找文件中的函数名。</div>
+                <div class="key">Ctrl+： </div><div class="info">打开搜索框，自动带#，输入关键字，查找文件中的变量名、属性名等。</div>
+                <div class="key">Ctrl+Shift+P </div><div class="info">打开命令框。场景栗子：打开命名框，使用package安装插件。</div>
+                <div class="key">Esc </div><div class="info">退出光标多行选择，退出搜索框，命令框等。</div>
+            </div>
+        </div>
+         
+        <div class="w50">
+            <h3>编辑类</h3>
+            <div>
+                <div class="key">Ctrl+J </div><div class="info">合并选中的多行代码为一行。</div>
+                <div class="key">Ctrl+Shift+D </div><div class="info">复制光标所在整行，插入到下一行。</div>
+                <div class="key">Tab </div><div class="info">向右缩进。</div>
+                <div class="key">Shift+Tab </div><div class="info">向左缩进。</div>
+                <div class="key">Ctrl+K+K </div><div class="info">从光标处开始删除代码至行尾。</div>
+                <div class="key">Ctrl+Shift+K </div><div class="info">删除整行。</div>
+                <div class="key">Ctrl+/ </div><div class="info">注释单行。</div>
+                <div class="key">Ctrl+Shift+/ </div><div class="info">注释多行。</div>
+                <div class="key">Ctrl+K+U </div><div class="info">转换大写。</div>
+                <div class="key">Ctrl+K+L </div><div class="info">转换小写。</div>
+                <div class="key">Ctrl+Z </div><div class="info">撤销。</div>
+                <div class="key">Ctrl+Y </div><div class="info">恢复撤销。</div>
+                <div class="key">Ctrl+U </div><div class="info">软撤销，和 Gtrl+Z 一样。</div>
+                <div class="key">Ctrl+F2 </div><div class="info">设置书签</div>
+                <div class="key">Ctrl+T </div><div class="info">左右字母互换。</div>
+                <div class="key">F6 </div><div class="info">单词检测拼写</div>
+            </div>
+            <h3>显示类</h3>
+            <div>
+                <div class="key">Ctrl+Tab </div><div class="info">按文件浏览过的顺序，切换当前窗口的标签页。</div>
+                <div class="key">Ctrl+PageDown </div><div class="info">向左切换当前窗口的标签页。</div>
+                <div class="key">Ctrl+PageUp </div><div class="info">向右切换当前窗口的标签页。</div>
+                <div class="key">Alt+Shift+1 </div><div class="info">窗口分屏，恢复默认1屏（非小键盘的数字）</div>
+                <div class="key">Alt+Shift+2 </div><div class="info">左右分屏-2列</div>
+                <div class="key">Alt+Shift+3 </div><div class="info">左右分屏-3列</div>
+                <div class="key">Alt+Shift+4 </div><div class="info">左右分屏-4列</div>
+                <div class="key">Alt+Shift+5 </div><div class="info">等分4屏</div>
+                <div class="key">Alt+Shift+8 </div><div class="info">垂直分屏-2屏</div>
+                <div class="key">Alt+Shift+9 </div><div class="info">垂直分屏-3屏</div>
+                <div class="key">Ctrl+K+B </div><div class="info">开启/关闭侧边栏。</div>
+                <div class="key">F11 </div><div class="info">全屏模式</div>
+                <div class="key">Shift+F11 </div><div class="info">免打扰模式</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
